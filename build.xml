@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="hunspell-java" default="jar" basedir=".">
+    <description>Builds the java bindings for hunspell.</description>
+
+    <path id="classpath">
+        <fileset dir="lib" includes="**/*.jar"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/classes"/>
+        <javac srcdir="src" destdir="build/classes" debug="true">
+	  <classpath>
+	    <path refid="classpath"/>
+	  </classpath>
+	</javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="build/jar"/>
+        <jar destfile="build/jar/hunspell.jar">
+		  <fileset dir="build/classes"/> 
+		  <fileset dir="native-lib"/> 
+		</jar>
+    </target>
+
+
+    <target name="webstart" depends="jar">
+  
+	  <!--
+		  Split the monolithic jna file into a shared one with java code and
+		  platform sepecifc ones for each supported platform, this is needed for
+		  webstart that handles native libs
+		-->
+      <zip destfile="build/jar/jna-jws.jar">
+		<zipfileset src="lib/jna.jar">
+		  <exclude name="**/*.dll" />
+		  <exclude name="**/*.so" />
+		  <exclude name="**/*.jnilib" />
+		  <exclude name="**/*.dylib" />
+	    </zipfileset>
+      </zip>
+
+      <zip destfile="build/jar/jna-linux-i386.jar">
+		<zipfileset src="lib/jna.jar" includes="com/sun/jna/linux-i386/libjnidispatch.so" fullpath="libjnidispatch.so"/>
+      </zip>
+
+      <zip destfile="build/jar/jna-linux-amd64.jar">
+		<zipfileset src="lib/jna.jar" includes="com/sun/jna/linux-amd64/libjnidispatch.so" fullpath="libjnidispatch.so"/>
+      </zip>
+
+      <zip destfile="build/jar/jna-darwin.jar">
+		<zipfileset src="lib/jna.jar" includes="com/sun/jna/darwin/libjnidispatch.jnilib" fullpath="libjnidispatch.jnilib"/>
+      </zip>
+
+      <zip destfile="build/jar/jna-win32-x86.jar">
+		<zipfileset src="lib/jna.jar" includes="com/sun/jna/win32-x86/jnidispatch.dll" fullpath="jnidispatch.dll"/>
+      </zip>
+
+	  <!-- 
+		   Create separate jar files with the hunspell natives as well.
+		-->
+      <jar destfile="build/jar/hunspell-jws.jar">
+		<fileset dir="build/classes"/> 
+	  </jar>
+
+      <zip destfile="build/jar/hunspell-win32-x86.jar">
+		<fileset dir="native-lib">
+		  <filename name="hunspell-win-x86-32.dll"/>
+	    </fileset>
+      </zip>
+
+      <zip destfile="build/jar/hunspell-linux-i386.jar">
+		<fileset dir="native-lib">
+		  <filename name="libhunspell-linux-x86-32.so"/>
+	    </fileset>
+      </zip>
+
+      <zip destfile="build/jar/hunspell-linux-amd64.jar">
+		<fileset dir="native-lib">
+		  <filename name="libhunspell-linux-x86-64.so"/>
+	    </fileset>
+      </zip>
+
+      <zip destfile="build/jar/hunspell-darwin-i386.jar">
+		<fileset dir="native-lib">
+		  <filename name="hunspell-darwin-x86-32.*"/>
+	    </fileset>
+      </zip>
+
+      <zip destfile="build/jar/hunspell-darwin-ppc.jar">
+		<fileset dir="native-lib">
+		  <filename name="hunspell-darwin-ppc-32.*"/>
+	    </fileset>
+      </zip>
+
+    </target>
+
+    <target name="sign" depends="webstart">
+	  <signjar alias="testonly" keystore="testkeystore" storepass="testtest" lazy="true">
+	    <fileset dir="build/jar" includes="**/*.jar" />
+	  </signjar>  
+    </target>
+
+<!-- These run targets could have been written as one nice one -->    
+    <target name="run" depends="jar">
+        <exec executable="java">
+	  <arg value="-cp"/>
+	  <arg value="lib/jna.jar:build/jar/hunspell.jar"/>
+	  <arg value="dk.dren.hunspell.HunspellMain"/>
+	</exec>
+    </target>
+
+    <target name="run-osx" depends="jar">
+        <exec executable="java">
+	  <arg value="-cp"/>
+	  <arg value="lib/jna.jar:build/jar/hunspell.jar"/>
+	  <arg value="-Droot=/Users/compdev/hunspell-java"/>
+	  <arg value="dk.dren.hunspell.HunspellMain"/>
+	</exec>
+    </target>
+
+    <target name="crawl" depends="jar">
+        <exec executable="java">
+	  <arg value="-cp"/>
+	  <arg value="lib/jna.jar;build/jar/hunspell.jar"/>
+	  <arg value="-Droot=c:/cygwin//home/hawk/hunspell-java"/>
+	  <arg value="dk.dren.hunspell.HunspellMain"/>
+	</exec>
+    </target>
+
+</project>
