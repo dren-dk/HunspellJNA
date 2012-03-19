@@ -106,29 +106,11 @@
 	  </signjar>  
     </target>
 
-<!-- These run targets could have been written as one nice one -->    
     <target name="run" depends="jar">
         <exec executable="java">
 	  <arg value="-cp"/>
 	  <arg value="lib/jna.jar:build/jar/hunspell.jar"/>
-	  <arg value="dk.dren.hunspell.HunspellMain"/>
-	</exec>
-    </target>
-
-    <target name="run-osx" depends="jar">
-        <exec executable="java">
-	  <arg value="-cp"/>
-	  <arg value="lib/jna.jar:build/jar/hunspell.jar"/>
-	  <arg value="-Droot=/Users/compdev/hunspell-java"/>
-	  <arg value="dk.dren.hunspell.HunspellMain"/>
-	</exec>
-    </target>
-
-    <target name="crawl" depends="jar">
-        <exec executable="java">
-	  <arg value="-cp"/>
-	  <arg value="lib/jna.jar;build/jar/hunspell.jar"/>
-	  <arg value="-Droot=c:/cygwin//home/hawk/hunspell-java"/>
+	  <arg value="-Droot=${basedir}"/>
 	  <arg value="dk.dren.hunspell.HunspellMain"/>
 	</exec>
     </target>

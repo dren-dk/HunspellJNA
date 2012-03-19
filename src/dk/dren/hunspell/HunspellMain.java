@@ -1,14 +1,12 @@
 package dk.dren.hunspell;
 
 import java.util.List;
-import java.util.Iterator;
-import java.util.ListIterator;
 
 /**
  * Simple testing and native build utility class, not useful in applications.
  *
- * The Hunspell java bindings are licensed under LGPL, see the file COPYING.txt
- * in the root of the distribution for the exact terms.
+ * The Hunspell java bindings are licensed under the same terms as Hunspell itself (GPL/LGPL/MPL tri-license),
+ * see the file COPYING.txt in the root of the distribution for the exact terms.
  *
  * @author Flemming Frandsen (flfr at stibo dot com)
  */
@@ -36,28 +34,32 @@ public class HunspellMain {
 				}				
 			
 				Hunspell.Dictionary d = Hunspell.getInstance().getDictionary(dir+"/dict/da_DK");
-			
+				System.err.println("Hunspell library and dictionary loaded");
 						
 				String words[] = {"Test", "Hest", "guest", "ombudsmandshat", "ombudsman",
 								  "ymerfest", "grøftegraver", "hængeplante", "garageport", "postbil", "huskop",
 								  "arne", "pladderballe", "Doctor", "Leo", "Lummerkrog",
-								  "Barnevognsbrand","barnehovedbeklædning"};
+								  "Barnevognsbrand","barnehovedbeklædning",
+								  "ymer", "drys", "ymerdrys",
+								  "æsel", "mælk", "æselmælk"};
 			
 				for (int i=0;i<words.length;i++) {
 				
-					for (int j=0;j<3;j++) {
-						String word = words[i];
-						if (d.misspelled(word)) {
-							print("misspelled: "+word);
-							List<String> suggestions = d.suggest(word);
+					String word = words[i];
+					if (d.misspelled(word)) {
+						List<String> suggestions = d.suggest(word);
+						print("misspelled: "+word);
+						if (suggestions.isEmpty()) {
+							print("\tNo suggestions.");
+						} else {
 							print("\tTry:");
-							for (String s : d.suggest(word)) {
+							for (String s : suggestions) {
 								print(" "+s);
 							}	
-							println("");
-						} else {
-							println("ok: "+word);		
 						}
+						println("");
+					} else {
+						println("ok: "+word);		
 					}
 				}
 			}

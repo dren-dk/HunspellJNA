@@ -23,8 +23,8 @@ import com.sun.jna.ptr.PointerByReference;
  * and singleton'ing the library instance (no need to load it more than once
  * per process) .
  *
- * The Hunspell java bindings are licensed under LGPL, see the file COPYING.txt
- * in the root of the distribution for the exact terms.
+ * The Hunspell java bindings are licensed under the same terms as Hunspell itself (GPL/LGPL/MPL tri-license),
+ * see the file COPYING.txt in the root of the distribution for the exact terms.
  *
  * @author Flemming Frandsen (flfr at stibo dot com)
  */
@@ -40,6 +40,11 @@ public class Hunspell {
      * The native library instance, created by JNA.
      */
     private HunspellLibrary hsl = null;
+	
+	/**
+	 * The library file that was loaded.
+	 */
+	private String libFile;
 
     /**
      * The instance of the HunspellManager, looks for the native lib in the
@@ -82,7 +87,7 @@ public class Hunspell {
      */
     protected Hunspell(String libDir) throws UnsatisfiedLinkError, UnsupportedOperationException {
 
-		String libFile = libDir != null ? libDir+"/"+libName() : libNameBare();
+		libFile = libDir != null ? libDir+"/"+libName() : libNameBare();
 		try {	   
 			hsl = (HunspellLibrary)Native.loadLibrary(libFile, HunspellLibrary.class);
 		} catch (UnsatisfiedLinkError urgh) {
@@ -118,10 +123,14 @@ public class Hunspell {
 					try { fos.close(); } catch(IOException e) { }
 				}
 			}
-			System.out.println("Loading temp lib: "+lib.getAbsolutePath());
+			//System.out.println("Loading temp lib: "+lib.getAbsolutePath());
 			hsl = (HunspellLibrary)Native.loadLibrary(lib.getAbsolutePath(), HunspellLibrary.class);
 		}
     }
+
+	public String getLibFile() {
+		return libFile;
+	}
 
     /**
      * Calculate the filename of the native hunspell lib.
@@ -154,14 +163,16 @@ public class Hunspell {
 			if (x86) {
 				return "hunspell-win-x86-32";
 			}
-			//if (amd64) { 
-            // Note: No bindings exist for this yet (no JNA support).
-			//	return "hunspell-win-x86-64";
-			//}
+			if (amd64) { 
+				return "hunspell-win-x86-64";
+			}
 
 		} else if (os.startsWith("mac os x")) {
 			if (x86) {
 				return "hunspell-darwin-x86-32";
+			}
+			if (amd64) {
+				return "hunspell-darwin-x86-64";
 			}
 			if (arch.equals("ppc")) {		    
 				return "hunspell-darwin-ppc-32";
@@ -176,10 +187,9 @@ public class Hunspell {
 			}
 			
 		} else if (os.startsWith("sunos")) {
-			//if (arch.equals("sparc")) {
+			//if (arch.equals("sparc")) { 
 			//	return "hunspell-sunos-sparc-64";
-			//}
-			
+			//}			
 		}
 	
 		throw new UnsupportedOperationException("Unknown OS/arch: "+os+"/"+arch);
