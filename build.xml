@@ -61,6 +61,10 @@
 		<zipfileset src="lib/jna.jar" includes="com/sun/jna/win32-x86/jnidispatch.dll" fullpath="jnidispatch.dll"/>
       </zip>
 
+      <zip destfile="build/jar/jna-win32-amd64.jar">
+		<zipfileset src="lib/jna.jar" includes="com/sun/jna/win32-amd64/jnidispatch.dll" fullpath="jnidispatch.dll"/>
+      </zip>
+
 	  <!-- 
 		   Create separate jar files with the hunspell natives as well.
 		-->
@@ -71,6 +75,12 @@
       <zip destfile="build/jar/hunspell-win32-x86.jar">
 		<fileset dir="native-lib">
 		  <filename name="hunspell-win-x86-32.dll"/>
+	    </fileset>
+      </zip>
+
+      <zip destfile="build/jar/hunspell-win32-amd64.jar">
+		<fileset dir="native-lib">
+		  <filename name="hunspell-win-x86-64.dll"/>
 	    </fileset>
       </zip>
 
@@ -99,6 +109,14 @@
       </zip>
 
     </target>
+
+	<target name="dist" depends="webstart">
+      <zip destfile="build/hunspell-jna-${version}.zip">
+		<fileset dir="build/jar"/>
+		<fileset dir="lib"/>
+		<fileset dir="." includes="src"/>
+      </zip>	  
+	</target>
 
     <target name="sign" depends="webstart">
 	  <signjar alias="testonly" keystore="testkeystore" storepass="testtest" lazy="true">
