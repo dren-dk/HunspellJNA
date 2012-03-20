@@ -50,7 +50,7 @@ public class Hunspell {
      * The instance of the HunspellManager, looks for the native lib in the
      * default directories
      */
-    public static Hunspell getInstance() throws Exception { 
+    public static Hunspell getInstance() throws UnsatisfiedLinkError, UnsupportedOperationException { 
 		return getInstance(null);
     }
 
@@ -60,7 +60,7 @@ public class Hunspell {
      *
      * @param libDir Optional absolute directory where the native lib can be found. 
      */
-    public static Hunspell getInstance(String libDir) throws Exception { 
+    public static Hunspell getInstance(String libDir) throws UnsatisfiedLinkError, UnsupportedOperationException { 
         if (hunspell != null) {
             return hunspell;
         }
