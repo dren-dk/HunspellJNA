@@ -102,6 +102,12 @@
 	    </fileset>
       </zip>
 
+      <zip destfile="build/jar/hunspell-darwin-amd64.jar">
+		<fileset dir="native-lib">
+		  <filename name="hunspell-darwin-x86-64.*"/>
+	    </fileset>
+      </zip>
+
       <zip destfile="build/jar/hunspell-darwin-ppc.jar">
 		<fileset dir="native-lib">
 		  <filename name="hunspell-darwin-ppc-32.*"/>
