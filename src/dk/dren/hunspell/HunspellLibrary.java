@@ -1,9 +1,7 @@
 package dk.dren.hunspell;
 
 import com.sun.jna.Library;
-import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import com.sun.jna.Structure;
 import com.sun.jna.ptr.PointerByReference;
 
 /**
@@ -59,4 +57,12 @@ public interface HunspellLibrary extends Library {
      */
     public int Hunspell_suggest(Pointer pHunspell, PointerByReference slst, byte[] word);
 
+    /**
+     * Free the memory used by the lists created as output from the other functions.
+     * @param pHunspell the Hunspell object returned by {@link #Hunspell_create(String, String)}
+     * @param slst the {@link PointerByReference} (<code>char***</code>) that is used for the suggestion lists
+     * @param n
+     */
+    public void Hunspell_free_list(Pointer pHunspell, PointerByReference slst, int n);
+    
 }
