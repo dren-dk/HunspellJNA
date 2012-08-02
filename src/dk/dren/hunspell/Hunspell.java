@@ -2,17 +2,14 @@ package dk.dren.hunspell;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
-import java.io.UnsupportedEncodingException;
-import java.lang.UnsatisfiedLinkError;
-import java.lang.UnsupportedOperationException;
-import java.nio.charset.CharacterCodingException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.IOException;
 
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
@@ -309,21 +306,32 @@ public class Hunspell {
 		 * @param word The word to check and offer suggestions for
 		 */
 		public List<String> suggest(String word) {
-			List<String> res = new ArrayList<String>();
 			try {		
 				int suggestionsCount = 0;
 				PointerByReference suggestions = new PointerByReference();
                 suggestionsCount = hsl.Hunspell_suggest(
 														hunspellDict, suggestions, stringToBytes(word));
-				if (suggestionsCount == 0) {
-					return res;
-				}
 
-				// Get each of the suggestions out of the pointer array.
-				Pointer[] pointerArray = suggestions.getValue().
-					getPointerArray(0, suggestionsCount);
+				return pointerToCStringsToList(suggestions, suggestionsCount);
+			} catch (UnsupportedEncodingException ex) { 
+				// Shouldn't happen...
+				return Collections.emptyList();
+			} 
+		}
 		
-				for (int i=0; i<suggestionsCount; i++) {
+		private List<String> pointerToCStringsToList(PointerByReference slst, int n) {
+			if ( n == 0 ) {
+				return Collections.emptyList();
+			}
+			
+			List<String> strings = new ArrayList<String>(n);
+			
+			try {
+				// Get each of the suggestions out of the pointer array.
+				Pointer[] pointerArray = slst.getValue().
+					getPointerArray(0, n);
+		
+				for (int i=0; i<n; i++) {
 
 					/* This only works for 8 bit chars, luckily hunspell uses either
 					   8 bit encodings or utf8, if someone implements support in
@@ -336,13 +344,17 @@ public class Hunspell {
 													   "String improperly terminated: " + len);
 						}
 						byte[] data = pointerArray[i].getByteArray(0, (int)len);
-						res.add(new String(data, encoding));
+						strings.add(new String(data, encoding));
 					}
 				}
-		
-			} catch (UnsupportedEncodingException ex) { } // Shouldn't happen...
-
-			return res;
+				
+			} catch (UnsupportedEncodingException e) {
+				// Shouldn't happen...
+			} finally {
+				hsl.Hunspell_free_list(hunspellDict, slst, n);
+			}
+			
+			return strings;
 		}
     }
 }
