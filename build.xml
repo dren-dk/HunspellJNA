@@ -27,6 +27,16 @@
 		  <fileset dir="native-lib"/> 
 		</jar>
     </target>
+    
+        <!-- Creates Javadoc -->
+    <target name="docs" depends="compile">
+        <javadoc packagenames="dk" sourcepath="src" destdir="build/javadocs">
+            <!-- Define which files / directory should get included, we include all -->
+            <fileset dir="src">
+                <include name="**/*.java" />
+           </fileset>
+        </javadoc>
+    </target>
 
 
     <target name="webstart" depends="jar">
