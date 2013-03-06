@@ -210,19 +210,29 @@ public class Hunspell {
      * and /dict/da_DK.aff get loaded
      */
     public Dictionary getDictionary(String baseFileName)
-		throws FileNotFoundException, SecurityException, UnsupportedEncodingException {
+		throws FileNotFoundException, UnsupportedEncodingException {
 
 		// Check the last modified date to detect if the dictionary files have changed and reload if they have.
 		File dicFile = new File(baseFileName + ".dic");
 		File affFile = new File(baseFileName + ".aff");
-		Long lastModified = new Long(dicFile.lastModified() + affFile.lastModified());
+
+		// TODO: Perhaps we should limit the frequency of stat'ing these files as we're spamming system calls this way:
+		Long lastModified;
+
+		try {
+			lastModified = new Long(dicFile.lastModified() + affFile.lastModified());
+		} catch (SecurityException e) {
+			// Meh, there's nothing we can do about it, but it should never happen anyway.
+			lastModified = new Long(0);
+		}
+		
+		if (modMap.containsKey(baseFileName) && modMap.get(baseFileName) != lastModified) {
+			destroyDictionary(baseFileName);
+		}
+
 		if (map.containsKey(baseFileName)) {
-			if(modMap.get(baseFileName) != lastModified) {
-				destroyDictionary(baseFileName);
-				return getDictionary(baseFileName);
-			} else {
-				return map.get(baseFileName);
-			}
+			return map.get(baseFileName);
+
 		} else {
 			Dictionary d = new Dictionary(baseFileName);
 			map.put(baseFileName, d);
