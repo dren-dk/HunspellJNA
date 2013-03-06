@@ -333,6 +333,44 @@ public class Hunspell {
 			} 
 		}
 		
+		/**
+		 * Returns a list of analyses 
+		 *
+		 * @param word The word to analyze
+		 */
+		public List<String> analyze(String word) {
+			try {		
+				int analysesCount = 0;
+				PointerByReference analyses = new PointerByReference();
+                analysesCount = hsl.Hunspell_analyze(
+														hunspellDict, analyses, stringToBytes(word));
+
+				return pointerToCStringsToList(analyses, analysesCount);
+			} catch (UnsupportedEncodingException ex) { 
+				// Shouldn't happen...
+				return Collections.emptyList();
+			} 
+		}
+		
+		/**
+		 * Returns a list of stems 
+		 *
+		 * @param word The word to find the stem for
+		 */
+		public List<String> stem(String word) {
+			try {		
+				int stemsCount = 0;
+				PointerByReference stems = new PointerByReference();
+                stemsCount = hsl.Hunspell_stem(
+														hunspellDict, stems, stringToBytes(word));
+
+				return pointerToCStringsToList(stems, stemsCount);
+			} catch (UnsupportedEncodingException ex) { 
+				// Shouldn't happen...
+				return Collections.emptyList();
+			} 
+		}
+		
 		private List<String> pointerToCStringsToList(PointerByReference slst, int n) {
 			if ( n == 0 ) {
 				return Collections.emptyList();

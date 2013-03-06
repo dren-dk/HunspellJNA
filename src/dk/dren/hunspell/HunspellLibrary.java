@@ -56,6 +56,32 @@ public interface HunspellLibrary extends Library {
      * @param word The word to offer suggestions for.
      */
     public int Hunspell_suggest(Pointer pHunspell, PointerByReference slst, byte[] word);
+	
+   /**
+     * Analyze word morphology
+     * @param pHunspell The Hunspell object returned by Hunspell_create
+     * @param slst  
+     * input: pointer to an array of strings pointer and the word to analyze
+     *   array of strings pointer (here *slst) may not be initialized
+     * output: number of analyses in string array, and analyses in
+     *   a newly allocated array of strings (*slts will be NULL when number
+     *   of analyses equals 0.)
+     * @param word The word to analyze.
+     */
+    public int Hunspell_analyze(Pointer pHunspell, PointerByReference slst, byte[] word);
+	
+    /**
+     * Find stem(s) for a word
+     * @param pHunspell The Hunspell object returned by Hunspell_create
+     * @param slst  
+     * input: pointer to an array of strings pointer and the word to be stemmed
+     *   array of strings pointer (here *slst) may not be initialized
+     * output: number of stems in string array, and stems in
+     *   a newly allocated array of strings (*slts will be NULL when number
+     *   of stems equals 0.)
+     * @param word The word to find stems for.
+     */
+    public int Hunspell_stem(Pointer pHunspell, PointerByReference slst, byte[] word);
 
     /**
      * Free the memory used by the lists created as output from the other functions.
