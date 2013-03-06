@@ -196,7 +196,12 @@ public class Hunspell {
      * This is the cache where we keep the already loaded dictionaries around
      */
     private HashMap<String, Dictionary> map = new HashMap<String, Dictionary>();
-
+	
+    /**
+     * This is the where we keep the last modified date for dictionary files
+     */
+	private HashMap<String, Long> modMap = new HashMap<String, Long>();
+	
     /**
      * Gets an instance of the dictionary. 
      *
@@ -205,15 +210,23 @@ public class Hunspell {
      * and /dict/da_DK.aff get loaded
      */
     public Dictionary getDictionary(String baseFileName)
-		throws FileNotFoundException, UnsupportedEncodingException {
+		throws FileNotFoundException, SecurityException, UnsupportedEncodingException {
 
-		// TODO: Detect if the dictionary files have changed and reload if they have.
+		// Check the last modified date to detect if the dictionary files have changed and reload if they have.
+		File dicFile = new File(baseFileName + ".dic");
+		File affFile = new File(baseFileName + ".aff");
+		Long lastModified = new Long(dicFile.lastModified() + affFile.lastModified());
 		if (map.containsKey(baseFileName)) {
-			return map.get(baseFileName);
-
+			if(modMap.get(baseFileName) != lastModified) {
+				destroyDictionary(baseFileName);
+				return getDictionary(baseFileName);
+			} else {
+				return map.get(baseFileName);
+			}
 		} else {
 			Dictionary d = new Dictionary(baseFileName);
 			map.put(baseFileName, d);
+			modMap.put(baseFileName, lastModified);
 			return d;
 		}
     }   
@@ -227,6 +240,7 @@ public class Hunspell {
     public void destroyDictionary(String baseFileName) {
 		if (map.containsKey(baseFileName)) {
 			map.remove(baseFileName);
+			modMap.remove(baseFileName);
 		}
     }
 
@@ -313,6 +327,44 @@ public class Hunspell {
 														hunspellDict, suggestions, stringToBytes(word));
 
 				return pointerToCStringsToList(suggestions, suggestionsCount);
+			} catch (UnsupportedEncodingException ex) { 
+				// Shouldn't happen...
+				return Collections.emptyList();
+			} 
+		}
+		
+		/**
+		 * Returns a list of analyses 
+		 *
+		 * @param word The word to analyze
+		 */
+		public List<String> analyze(String word) {
+			try {		
+				int analysesCount = 0;
+				PointerByReference analyses = new PointerByReference();
+                analysesCount = hsl.Hunspell_analyze(
+														hunspellDict, analyses, stringToBytes(word));
+
+				return pointerToCStringsToList(analyses, analysesCount);
+			} catch (UnsupportedEncodingException ex) { 
+				// Shouldn't happen...
+				return Collections.emptyList();
+			} 
+		}
+		
+		/**
+		 * Returns a list of stems 
+		 *
+		 * @param word The word to find the stem for
+		 */
+		public List<String> stem(String word) {
+			try {		
+				int stemsCount = 0;
+				PointerByReference stems = new PointerByReference();
+                stemsCount = hsl.Hunspell_stem(
+														hunspellDict, stems, stringToBytes(word));
+
+				return pointerToCStringsToList(stems, stemsCount);
 			} catch (UnsupportedEncodingException ex) { 
 				// Shouldn't happen...
 				return Collections.emptyList();
