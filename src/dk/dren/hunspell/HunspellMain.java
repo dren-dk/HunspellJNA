@@ -9,6 +9,9 @@ import java.util.List;
  * see the file COPYING.txt in the root of the distribution for the exact terms.
  *
  * @author Flemming Frandsen (flfr at stibo dot com)
+ * @author Hartmut Goebel (h dot goebel at crazy-compilers dot com)
+ *
+ *  Usage:  java -Droot=/usr/share/dicts -Dlang=de_DE HunspellMain
  */
 
 public class HunspellMain {
@@ -32,8 +35,13 @@ public class HunspellMain {
 				if (System.getProperties().containsKey("root")) {
 					dir = System.getProperty("root");
 				}				
+
+				String language = "da_DK";
+				if (System.getProperties().containsKey("lang")) {
+					language = System.getProperty("lang");
+				}
 			
-				Hunspell.Dictionary d = Hunspell.getInstance().getDictionary(dir+"/dict/da_DK");
+				Hunspell.Dictionary d = Hunspell.getInstance().getDictionary(dir+"/"+language);
 				System.err.println("Hunspell library and dictionary loaded");
 						
 				String words[] = {"Test", "Hest", "guest", "ombudsmandshat", "ombudsman",
