@@ -31,7 +31,7 @@ public class HunspellMain {
 			} else { 
 
 				System.err.println("Loading Hunspell");
-				String dir = "/home/ff/projects/hunspell-java";
+				String dir = "/usr/share/hunspell";
 				if (System.getProperties().containsKey("root")) {
 					dir = System.getProperty("root");
 				}				
