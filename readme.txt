@@ -118,6 +118,13 @@ overhead in calling it more than once.
 getDictionary() is also internally cached, so it costs no more than a hash
 lookup when calling the second time.
 
+* Testing
+
+For a quick test of the JNA interface run
+
+  java -cp lib/jna.jar:build/jar/hunspell.jar \
+    -Droot=/path/to/your/dicts/ -Dlang=en_GB dk.dren.hunspell.HunspellMain
+
 
 * TODO
 
