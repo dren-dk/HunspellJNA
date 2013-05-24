@@ -49,7 +49,13 @@ public class HunspellMain {
 								  "arne", "pladderballe", "Doctor", "Leo", "Lummerkrog",
 								  "Barnevognsbrand","barnehovedbeklædning",
 								  "ymer", "drys", "ymerdrys",
-								  "æsel", "mælk", "æselmælk"};
+								  "æsel", "mælk", "æselmælk",
+						  "Brotbacken", "Pausbacken", "pausbackig", "Backenknochenbruch",
+						  "Donnerdampfschifffahrt",
+						  "Donnerdampfschifffahrtsgesellschaftskapitän",
+						  "Messer", "Schleifer", "Messerschleifer",
+						  "muss", "muß"
+						  };
 			
 				for (int i=0;i<words.length;i++) {
 				
