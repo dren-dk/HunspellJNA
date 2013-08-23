@@ -27,38 +27,38 @@ public class HunspellMain {
 		try {
 			if (args.length == 1 && args[0].equals("-libname")) {
 				System.out.println(Hunspell.libName());
-			
-			} else { 
+
+			} else {
 
 				System.err.println("Loading Hunspell");
 				String dir = "/usr/share/hunspell";
 				if (System.getProperties().containsKey("root")) {
 					dir = System.getProperty("root");
-				}				
+				}
 
 				String language = "da_DK";
 				if (System.getProperties().containsKey("lang")) {
 					language = System.getProperty("lang");
 				}
-			
+
 				Hunspell.Dictionary d = Hunspell.getInstance().getDictionary(dir+"/"+language);
 				System.err.println("Hunspell library and dictionary loaded");
-						
+
 				String words[] = {"Test", "Hest", "guest", "ombudsmandshat", "ombudsman",
-								  "ymerfest", "grøftegraver", "hængeplante", "garageport", "postbil", "huskop",
+								  "ymerfest", "g0r\u00f8ftegraver", "h\u00e6ngeplante", "garageport", "postbil", "huskop",
 								  "arne", "pladderballe", "Doctor", "Leo", "Lummerkrog",
-								  "Barnevognsbrand","barnehovedbeklædning",
+								  "Barnevognsbrand","barnehovedbekl\u00e6dning",
 								  "ymer", "drys", "ymerdrys",
-								  "æsel", "mælk", "æselmælk",
+								  "\u00e6sel", "m\u00e6lk", "\u00e6selm\u00e6lk",
 						  "Brotbacken", "Pausbacken", "pausbackig", "Backenknochenbruch",
 						  "Donnerdampfschifffahrt",
-						  "Donnerdampfschifffahrtsgesellschaftskapitän",
+						  "Donnerdampfschifffahrtsgesellschaftskapit\u00e4n",
 						  "Messer", "Schleifer", "Messerschleifer",
-						  "muss", "muß"
+						  "muss", "mu\u00df"
 						  };
-			
+
 				for (int i=0;i<words.length;i++) {
-				
+
 					String word = words[i];
 					if (d.misspelled(word)) {
 						List<String> suggestions = d.suggest(word);
@@ -69,15 +69,15 @@ public class HunspellMain {
 							print("\tTry:");
 							for (String s : suggestions) {
 								print(" "+s);
-							}	
+							}
 						}
 						println("");
 					} else {
-						println("ok: "+word);		
+						println("ok: "+word);
 					}
 				}
 			}
-		
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			println("Failed: "+e);
