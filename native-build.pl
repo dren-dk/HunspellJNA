@@ -63,7 +63,7 @@ if ($sysname eq 'Linux') {
 } elsif ($sysname eq 'Darwin') {
     if ($machine eq 'Power Macintosh') {
 		$unixy = 1;
-    } elsif ($machine eq 'i386') {
+    } elsif ($machine eq 'i386' || $machine eq 'x86_64') {
 		$unixy = 1;
     } else {
 		die "The architecture $machine is not supported, please fix native-build.pl";		
