@@ -108,13 +108,13 @@
 
       <zip destfile="build/jar/hunspell-darwin-i386.jar">
 		<fileset dir="native-lib">
-		  <filename name="hunspell-darwin-x86-32.*"/>
+		  <filename name="libhunspell-darwin-x86-32.*"/>
 	    </fileset>
       </zip>
 
       <zip destfile="build/jar/hunspell-darwin-amd64.jar">
 		<fileset dir="native-lib">
-		  <filename name="hunspell-darwin-x86-64.*"/>
+		  <filename name="libhunspell-darwin-x86-64.*"/>
 	    </fileset>
       </zip>
 
