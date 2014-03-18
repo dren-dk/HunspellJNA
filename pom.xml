@@ -1,0 +1,167 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!--
+ $Id$
+
+ vim:ai noci noet nopi sts=8 sw=8 ts=8:
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>dk.dren</groupId>
+	<artifactId>hunspell</artifactId>
+	<version>1.3.2-SNAPSHOT</version>
+	<name>HunspellJNA</name>
+	<description>Hunspell library for Java based on JNA</description>
+	<url>http://dren.dk/hunspell.html</url>
+
+	<licenses>
+		<license>
+			<name>Mozilla Public License</name>
+			<url>http://www.mozilla.org/MPL/MPL-1.1.html</url>
+			<distribution>repo</distribution>
+		</license>
+		<license>
+			<name>GNU General Public License, version 2</name>
+			<url>https://www.gnu.org/licenses/old-licenses/gpl-2.0.html</url>
+			<distribution>repo</distribution>
+			<comments>Any version of the GPL after 2 is acceptable.</comments>
+		</license>
+		<license>
+			<name>GNU Library General Public License, version 2.0</name>
+			<url>https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html</url>
+			<distribution>repo</distribution>
+			<comments>Any version of the LGPL after 2.0 is acceptable.</comments>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>https://github.com/dren-dk/HunspellJNA</url>
+		<connection>scm:git:https://github.com/dren-dk/HunspellJNA.git</connection>
+	</scm>
+
+	<issueManagement>
+		<url>https://github.com/dren-dk/HunspellJNA/issues</url>
+	</issueManagement>
+
+	<developers>
+		<developer>
+			<id>dren.dk</id>
+			<name>Flemming Frandsen</name>
+			<email>dren.dk@gmail.com</email>
+		</developer>
+	</developers>
+
+	<contributors>
+		<contributor>
+			<name>Thomas Joiner</name>
+		</contributor>
+		<contributor>
+			<name>Andrew ``Bass'' Shcheglov</name>
+			<email>andrewbass@gmail.com</email>
+		</contributor>
+	</contributors>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<emacsMode>true</emacsMode>
+	</properties>
+
+	<build>
+		<directory>${basedir}/build</directory>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>java-test</testSourceDirectory>
+		<outputDirectory>${project.build.directory}/classes</outputDirectory>
+		<testOutputDirectory>${project.build.directory}/test-classes</testOutputDirectory>
+
+		<resources>
+			<resource>
+				<directory>${basedir}/native-lib</directory>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<fork>false</fork>
+					<showDeprecation>true</showDeprecation>
+					<showWarnings>true</showWarnings>
+					<compilerArgs>
+						<arg>-Xlint:all</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<outputDirectory>${project.build.directory}/jar</outputDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<outputDirectory>${project.build.directory}/jar</outputDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>package-javadocs</id>
+						<phase>package</phase>
+						<goals>
+							<goal>javadoc</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.java.dev.jna</groupId>
+			<artifactId>jna</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+			</plugin>
+		</plugins>
+	</reporting>
+</project>
