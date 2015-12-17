@@ -204,6 +204,12 @@ public class Hunspell {
 
     /**
      * Gets an instance of the dictionary.
+     * 
+     * If a cached instance of the dictionary exists it will be returned even
+     * if it's contents aren't in sync with the affix/dictionary files. If you
+     * would instead prefer a dictionary that reflects the current file
+     * contents you should first remove the stale dictionary from the cache
+     * and destroy it.
      *
      * @param baseFileName the base name of the dictionary,
      * passing /dict/da_DK means that the files /dict/da_DK.dic
@@ -211,38 +217,65 @@ public class Hunspell {
      */
     public Dictionary getDictionary(String baseFileName)
 		throws FileNotFoundException, UnsupportedEncodingException {
+    	
+    	return getDictionary(baseFileName, false);
+    }
+    
+    /**
+     * Gets an instance of the dictionary optionally checking to see if it has
+     * changed since the last time it was cached.
+     *
+     * @param baseFileName the base name of the dictionary,
+     * passing /dict/da_DK means that the files /dict/da_DK.dic
+     * and /dict/da_DK.aff get loaded
+     * @param isUpdateAllowed
+     */
+    public Dictionary getDictionary(String baseFileName, boolean isUpdateAllowed)
+		throws FileNotFoundException, UnsupportedEncodingException {
 
-		// Check the last modified date to detect if the dictionary files have changed and reload if they have.
-		File dicFile = new File(baseFileName + ".dic");
-		File affFile = new File(baseFileName + ".aff");
-
-		// TODO: Perhaps we should limit the frequency of stat'ing these files as we're spamming system calls this way:
-		Long lastModified;
-
-		try {
-			lastModified = new Long(dicFile.lastModified() + affFile.lastModified());
-		} catch (SecurityException e) {
-			// Meh, there's nothing we can do about it, but it should never happen anyway.
-			lastModified = new Long(0);
+    	
+    	Dictionary result = map.get(baseFileName);
+		
+		if (result == null || isUpdateAllowed) {
+			// Check the last modified date to detect if the dictionary files have changed and reload if they have.
+			File dicFile = new File(baseFileName + ".dic");
+			File affFile = new File(baseFileName + ".aff");
+	
+			Long lastModified;
+			
+			try {
+				lastModified = Long.valueOf(dicFile.lastModified() + affFile.lastModified());
+			} catch (SecurityException e) {
+				// Meh, there's nothing we can do about it, but it should never happen anyway.
+				lastModified = Long.valueOf(0);
+			}
+			
+			//
+			if (result != null && !lastModified.equals(modMap.get(baseFileName))) {
+				// NOTE: We're only removing the dictionary from the cache. The memory
+				// used by the dictionary isn't being freed up here because other
+				// references to the dicti;onary may still be in use. If not then the
+				// finalizer will release the memory
+				destroyDictionary(baseFileName);
+				result = null;
+			}
+			
+			if (result == null) {
+				result = new Dictionary(baseFileName);
+				
+				map.put(baseFileName, result);
+				modMap.put(baseFileName, lastModified);
+			}
 		}
-
-		if (modMap.containsKey(baseFileName) && modMap.get(baseFileName) != lastModified) {
-			destroyDictionary(baseFileName);
-		}
-
-		if (map.containsKey(baseFileName)) {
-			return map.get(baseFileName);
-
-		} else {
-			Dictionary d = new Dictionary(baseFileName);
-			map.put(baseFileName, d);
-			modMap.put(baseFileName, lastModified);
-			return d;
-		}
+		
+		return result;
     }
 
     /**
-     * Removes a dictionary from the internal cache
+     * Removes a dictionary from the internal cache.
+     * 
+     * Note: that this will not free up any memory used by the Dictionary
+     * itself.
      *
      * @param baseFileName the base name of the dictionary, as passed to
      * getDictionary()
@@ -258,6 +291,7 @@ public class Hunspell {
      * Class representing a single dictionary.
      */
     public class Dictionary {
+    	
 		/**
 		 * The pointer to the hunspell object as returned by the hunspell
 		 * constructor.
@@ -268,7 +302,6 @@ public class Hunspell {
 		 * The encoding used by this dictionary
 		 */
 		private String encoding;
-
 
 		/**
 		 * Creates an instance of the dictionary.
@@ -290,6 +323,17 @@ public class Hunspell {
 
 			// This will blow up if the encoding doesn't exist
 			stringToBytes("test");
+		}
+		
+		@Override
+		/**
+		 * Makes sure that the dictionary was destroyed before it's
+		 * garbage collected.
+		 */
+		protected void finalize() throws Throwable {
+			destroy();
+			
+			super.finalize();
 		}
 
 		/**
