@@ -148,7 +148,7 @@ public class Hunspell {
 		}
     }
 
-    public static String libNameBare() throws UnsupportedOperationException {
+	static String libNameBare() throws UnsupportedOperationException {
 		String os = System.getProperty("os.name").toLowerCase();
 		String arch = System.getProperty("os.arch").toLowerCase();
 
@@ -244,17 +244,17 @@ public class Hunspell {
 			Long lastModified;
 			
 			try {
-				lastModified = Long.valueOf(dicFile.lastModified() + affFile.lastModified());
+				lastModified = dicFile.lastModified() + affFile.lastModified();
 			} catch (SecurityException e) {
 				// Meh, there's nothing we can do about it, but it should never happen anyway.
-				lastModified = Long.valueOf(0);
+				lastModified = 0L;
 			}
 			
 			//
 			if (result != null && !lastModified.equals(modMap.get(baseFileName))) {
 				// NOTE: We're only removing the dictionary from the cache. The memory
 				// used by the dictionary isn't being freed up here because other
-				// references to the dicti;onary may still be in use. If not then the
+				// references to the dictionary may still be in use. If not then the
 				// finalizer will release the memory
 				destroyDictionary(baseFileName);
 				result = null;
@@ -326,11 +326,8 @@ public class Hunspell {
 		}
 		
 		@Override
-		/**
-		 * Makes sure that the dictionary was destroyed before it's
-		 * garbage collected.
-		 */
 		protected void finalize() throws Throwable {
+			// Makes sure that the dictionary was destroyed before it's garbage collected.
 			destroy();
 			
 			super.finalize();

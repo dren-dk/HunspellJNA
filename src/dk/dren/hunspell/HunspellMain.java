@@ -8,6 +8,8 @@ import java.util.List;
  * The Hunspell java bindings are licensed under the same terms as Hunspell itself (GPL/LGPL/MPL tri-license),
  * see the file COPYING.txt in the root of the distribution for the exact terms.
  *
+ * The -libname argument can be used on strange platforms to
+ *
  * @author Flemming Frandsen (flfr at stibo dot com)
  * @author Hartmut Goebel (h dot goebel at crazy-compilers dot com)
  *

@@ -2,11 +2,9 @@ package dk.dren.hunspell;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -14,16 +12,16 @@ public class TestDictionary {
 
 	private static final String MISSPELLED = "Misspelled word not found : ";
 	private static final String CORRECTLY_SPELLED = "Correctly spelled word invalid reported as misspelled ";
-	String dk_words[] = { "ymerfest", "gr\u00f8ftegraver", "h\u00e6ngeplante",
+	private static final String DK_WORDS[] = { "ymerfest", "gr\u00f8ftegraver", "h\u00e6ngeplante",
 			"\u00e6selm\u00e6lk" };
 
-	String dk_words_misspelled[] = { "y0merfest", "g0r\u00f8ftesgraver",
+	private static final String dk_words_misspelled[] = { "y0merfest", "g0r\u00f8ftesgraver",
 			"h\u00e6ngesplante", "\u00e6selsm\u00e6lk" };
 
-	String de_words[] = { "Donnerdampfschifffahrt",
+	private static final String de_words[] = { "Donnerdampfschifffahrt",
 			"Donnerdampfschifffahrtsgesellschaftskapit\u00e4n", "Messer",
 			"muss" };
-	String de_words_misspelled[] = { "Donnnerdampfschifffahrt",
+	private static final String de_words_misspelled[] = { "Donnnerdampfschifffahrt",
 			"Donnnerdampfschiffffahrtsgesellschaftskapit\u00e4n", "Messser",
 			"musss" };
 
@@ -59,7 +57,7 @@ public class TestDictionary {
 		for (String word : de_words_misspelled) {
 			assertTrue(MISSPELLED + word, de.misspelled(word));
 		}
-		for (String word : dk_words) {
+		for (String word : DK_WORDS) {
 			assertFalse(CORRECTLY_SPELLED + word, da.misspelled(word));
 		}
 		for (String word : de_words) {
@@ -75,15 +73,15 @@ public class TestDictionary {
 		for (String word : dk_words_misspelled) {
 			List<String> suggest = da.suggest(word);
 			// System.out.println("Found : " + suggest);
-			assertTrue("Suggestions did not contain " + dk_words[i],
-					suggest.contains(dk_words[i++]));
+			assertTrue("Suggestions did not contain " + DK_WORDS[i],
+					suggest.contains(DK_WORDS[i++]));
 		}
 	}
 
 	@Test
 	public void testAnalyze() {
 		// TODO actually do some test here for now (and forseeable future just print)
-		for (String word : dk_words) {
+		for (String word : DK_WORDS) {
 			List<String> analyze = da.analyze(word);
 			System.out.println("DK analyze : " + analyze);
 		}
@@ -96,7 +94,7 @@ public class TestDictionary {
 	@Test
 	public void testStem() {
 		// TODO actually do some test here for now (and forseeable future just print)
-		for (String word : dk_words) {
+		for (String word : DK_WORDS) {
 			List<String> stem = da.stem(word);
 			System.out.println("DK stem : " + stem);
 		}

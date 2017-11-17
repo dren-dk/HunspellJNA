@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dk.dren</groupId>
 	<artifactId>hunspell</artifactId>
-	<version>1.3.2-SNAPSHOT</version>
+	<version>1.3.2</version>
 	<name>HunspellJNA</name>
 	<description>Hunspell library for Java based on JNA</description>
 	<url>http://dren.dk/hunspell.html</url>
@@ -164,4 +164,13 @@
 			</plugin>
 		</plugins>
 	</reporting>
+
+	<distributionManagement>
+          <repository>
+            <id>bintray-dren-dk-hunspell</id>
+            <name>dren-dk-hunspell</name>
+            <url>https://api.bintray.com/maven/dren-dk/hunspell/hunspell/</url>
+          </repository>
+	</distributionManagement>
+	
 </project>
