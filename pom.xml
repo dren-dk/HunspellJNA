@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dk.dren</groupId>
 	<artifactId>hunspell</artifactId>
-	<version>1.3.2</version>
+	<version>1.3.2.1-SNAPSHOT</version>
 	<name>HunspellJNA</name>
 	<description>Hunspell library for Java based on JNA</description>
 	<url>http://dren.dk/hunspell.html</url>
