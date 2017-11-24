@@ -12,6 +12,23 @@ https://github.com/dren-dk/HunspellJNA
 See this page for dictionaries:
 http://wiki.services.openoffice.org/wiki/Dictionaries
 
+# Included native binaries 
+
+I'm in the process of obtaining the binaries for new versions of hunspell,
+at the moment these are the versions included:
+
+## 1.6.2
+* libhunspell-linux-x86-64.so
+
+## 1.3.2
+* hunspell-darwin-ppc-32.jnilib
+* hunspell-win-x86-32.dll
+* hunspell-win-x86-64.dll
+* libhunspell-darwin-x86-32.dylib
+* libhunspell-darwin-x86-64.dylib
+* libhunspell-linux-x86-32.so
+
+
 
 # Building the native binaries
 

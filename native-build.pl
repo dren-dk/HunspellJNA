@@ -47,6 +47,7 @@ sub untar() {
 	}
 	
 	chdir "$Bin/native-src/$hundir";
+	print "Building in $Bin/native-src/$hundir\n";
 	return "$Bin/native-src/$hundir";
 }
 
@@ -73,9 +74,13 @@ if ($sysname eq 'Linux') {
 
 if ($unixy) { # aah, a sane OS, so life is simple.
 
-    my $ns = untar;	
-    system("./configure && make") and die "Unable to configure and make, please fix";  
-    
+    my $ns = untar;
+
+
+    system("autoreconf -vfi") and die "Failed while running autoreconf -vfi";
+    system("./configure") and die "Failed to configure";
+    system("make") and die "Failed to make";
+
     my $outputDir = "$ns/src/hunspell/.libs";
     chdir $outputDir or die "Unable to chdir to $outputDir: $!";
     opendir D, "." or die "Urgh: $!";
