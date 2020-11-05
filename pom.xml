@@ -1,6 +1,6 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!--
- $Id$
+ $Id: d091ac5d0bd73bc1988c76af8a060f46e3da0b5a $
 
  vim:ai noci noet nopi sts=8 sw=8 ts=8:
  -->
@@ -151,7 +151,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
+			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
