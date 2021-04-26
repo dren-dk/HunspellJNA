@@ -3,7 +3,7 @@
 # JNA based Java API for Hunspell
 
 This package contains the JNA based Java bindings for the Hunspell, see:
-https://github.com/twall/jna and http://hunspell.sourceforge.net/ for details
+https://github.com/twall/jna and http://hunspell.github.io/ for details
 on how these work.
 
 This java wrapper lives at:
