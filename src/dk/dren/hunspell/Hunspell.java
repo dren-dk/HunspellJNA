@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -102,7 +103,7 @@ public class Hunspell {
 			File lib;
 			FileOutputStream fos = null;
 			try {
-				lib = File.createTempFile("jna", "."+libFile);
+				lib = Files.createTempFile("jna", "." + libFile).toFile();
 				lib.deleteOnExit();
 				fos = new FileOutputStream(lib);
 				int count;
